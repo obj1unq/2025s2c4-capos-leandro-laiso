@@ -1,1 +1,55 @@
-r
+import capos.*
+
+describe "Parte 1: Rolando" {
+    test "Al principio rolando puede agarrar objetos" {
+        assert.equals(true, rolando.puedeAgarrar())
+    }
+
+    test "Rolando puede agarrar 2 objetos y no más" {
+        rolando.agarrar(espadaDelDestino)
+        rolando.agarrar(libroDeHechizos)
+        assert.equals(false, rolando.puedeAgarrar())
+    }
+
+    test "Al querer agarrar más objetos de los que puede, da error" {
+        rolando.agarrar(espadaDelDestino)
+        rolando.agarrar(libroDeHechizos)
+        assert.throwsException({rolando.agarrar(armaduraDeAceroValyrio)})
+    }
+
+    test "Rolando puede guardar todos sus objetos en el castillo y ahora puede agarrar cosas" {
+        rolando.agarrar(espadaDelDestino)
+        rolando.agarrar(libroDeHechizos)
+        rolando.guardarArtefactosEnCastillo()
+        assert.equals(true, rolando.puedeAgarrar())
+    }
+
+    test "Rolando agarra 2 artefactos, los deja en el castillo, agarra uno más y también lo guarda. Puede agarrar más cosas" {
+        rolando.agarrar(espadaDelDestino)
+        rolando.agarrar(libroDeHechizos)
+        rolando.guardarArtefactosEnCastillo()
+        rolando.agarrar(collarDivino)
+        rolando.guardarArtefactosEnCastillo()
+        assert.equals(true, rolando.puedeAgarrar())
+    }
+
+    test "Consultar los elementos de rolando y los del castillo" {
+        rolando.agarrar(espadaDelDestino)
+        rolando.agarrar(libroDeHechizos)
+        rolando.guardarArtefactosEnCastillo()
+        rolando.agarrar(collarDivino)
+        assert.equals([collarDivino], rolando.artefactos())
+        assert.equals([espadaDelDestino, libroDeHechizos], castillo.inventario())
+        assert.equals([collarDivino, espadaDelDestino, libroDeHechizos], rolando.artefactosTotales())
+    }
+
+    test "Consultar si rolando tiene un artefacto específico" {
+        rolando.agarrar(espadaDelDestino)
+        assert.equals(false, rolando.poseeArtefacto(collarDivino))
+        assert.equals(true, rolando.poseeArtefacto(espadaDelDestino))
+    }
+
+    test "Consultar el historial de encuentros con artefactos de rolando (aunque no los agarre)" {
+        
+    }
+}
