@@ -50,6 +50,12 @@ describe "Parte 1: Rolando" {
     }
 
     test "Consultar el historial de encuentros con artefactos de rolando (aunque no los agarre)" {
-        
+        rolando.encontrar(espadaDelDestino)
+        rolando.encontrar(libroDeHechizos)
+        rolando.encontrar(collarDivino)
+        rolando.guardarArtefactosEnCastillo()
+        rolando.encontrar(armaduraDeAceroValyrio)
+        rolando.encontrar(collarDivino)
+        assert.equals([espadaDelDestino, libroDeHechizos, collarDivino, armaduraDeAceroValyrio, collarDivino], rolando.consultarHistoria())
     }
 }

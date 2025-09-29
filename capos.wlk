@@ -26,10 +26,6 @@ object rolando {
 
     method agarrar(artefacto) {
         self.validarAgarrar()
-        self.agregarArtefacto(artefacto)
-    }
-
-    method agregarArtefacto(artefacto) {
         artefactos.add(artefacto)
     }
 
@@ -41,10 +37,6 @@ object rolando {
 
     method guardarArtefactosEnCastillo() {
         castillo.guardar(artefactos)
-        self.vaciarArtefactos()
-    }
-
-    method vaciarArtefactos() {
         artefactos.clear()
     }
 }
