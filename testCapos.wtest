@@ -56,6 +56,54 @@ describe "Parte 1: Rolando" {
         rolando.guardarArtefactosEnCastillo()
         rolando.encontrar(armaduraDeAceroValyrio)
         rolando.encontrar(collarDivino)
-        assert.equals([espadaDelDestino, libroDeHechizos, collarDivino, armaduraDeAceroValyrio, collarDivino], rolando.consultarHistoria())
+        assert.equals([espadaDelDestino, libroDeHechizos, collarDivino, armaduraDeAceroValyrio, collarDivino], rolando.historia())
+    }
+}
+
+describe "Parte 2.1: Comportamiento de los artefactos" {
+
+    method initialize() {
+        rolando.aumentarCapacidad()
+        rolando.encontrar(espadaDelDestino)
+        rolando.encontrar(armaduraDeAceroValyrio)
+        rolando.encontrar(collarDivino)
+    }
+
+    test "Poder de pelea de rolando y artefactos sin haber batallado" {
+        assert.equals(5, rolando.poderBase())
+        assert.equals(5, espadaDelDestino.poderQueOtorga(rolando))
+        assert.equals(6, armaduraDeAceroValyrio.poderQueOtorga(rolando))
+        assert.equals(3, collarDivino.poderQueOtorga(rolando))
+        assert.equals(19, rolando.poderDePelea())
+    }
+
+    test "Poder de pelea de rolando y artefactos tras 1 batalla" {
+        rolando.batallar()
+        assert.equals(6, rolando.poderBase())
+        assert.equals(3, espadaDelDestino.poderQueOtorga(rolando))
+        assert.equals(6, armaduraDeAceroValyrio.poderQueOtorga(rolando))
+        assert.equals(3, collarDivino.poderQueOtorga(rolando))
+        assert.equals(18, rolando.poderDePelea())
+    }
+
+    test "Poder de pelea de rolando y artefactos tras 2 batallas" {
+        rolando.batallar()
+        rolando.batallar()
+        assert.equals(7, rolando.poderBase())
+        assert.equals(3.5, espadaDelDestino.poderQueOtorga(rolando))
+        assert.equals(6, armaduraDeAceroValyrio.poderQueOtorga(rolando))
+        assert.equals(5, collarDivino.poderQueOtorga(rolando))
+        assert.equals(21.5, rolando.poderDePelea())
+    }
+
+    test "Poder de pelea de rolando y artefactos tras 3 batallas" {
+        rolando.batallar()
+        rolando.batallar()
+        rolando.batallar()
+        assert.equals(8, rolando.poderBase())
+        assert.equals(4, espadaDelDestino.poderQueOtorga(rolando))
+        assert.equals(6, armaduraDeAceroValyrio.poderQueOtorga(rolando))
+        assert.equals(6, collarDivino.poderQueOtorga(rolando))
+        assert.equals(24, rolando.poderDePelea())
     }
 }

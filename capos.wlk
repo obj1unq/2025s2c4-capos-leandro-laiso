@@ -2,6 +2,7 @@ object rolando {
     const artefactos = []
     const historia = []
     var maxArtefactos = 2
+    var poderBase = 5
 
     method artefactos() = artefactos
 
@@ -9,7 +10,13 @@ object rolando {
 
     method poseeArtefacto(artefacto) = self.artefactosTotales().contains(artefacto)
 
-    method consultarHistoria() = historia
+    method historia() = historia
+
+    method poderBase() = poderBase
+
+    method poderDePelea() = poderBase + self.poderDeArtefactos()
+
+    method poderDeArtefactos() = artefactos.sum({a => a.poderQueOtorga(self)})
 
     method puedeAgarrar() = artefactos.size() < maxArtefactos
 
@@ -39,6 +46,15 @@ object rolando {
         castillo.guardar(artefactos)
         artefactos.clear()
     }
+
+    method aumentarCapacidad() {
+        maxArtefactos += 1
+    }
+
+    method batallar() {
+        artefactos.forEach({a => a.usarEnBatalla()})
+        poderBase += 1
+    }
 }
 
 object castillo {
@@ -52,7 +68,22 @@ object castillo {
 }
 
 object espadaDelDestino {
+    var cantBatallas = 0
 
+    method fueUtilizada() = cantBatallas > 0
+
+    method poderQueOtorga(personaje) {
+        return 
+            if (not self.fueUtilizada()) {
+                personaje.poderBase()
+            } else {
+                personaje.poderBase() * 0.5
+            }
+    }
+
+    method usarEnBatalla() {
+        cantBatallas += 1
+    }
 }
 
 object libroDeHechizos {
@@ -60,9 +91,29 @@ object libroDeHechizos {
 }
 
 object collarDivino {
+    var cantBatallas = 0
+    const poderBase = 3
 
+    method poderQueOtorga(personaje) {
+        return
+            if (personaje.poderBase() > 6) {
+                poderBase + cantBatallas
+            } else {
+                poderBase
+            }
+    }
+
+    method usarEnBatalla() {
+        cantBatallas += 1
+    }
 }
 
 object armaduraDeAceroValyrio {
+    const poderBase = 6
 
+    method poderQueOtorga(personaje) = poderBase
+
+    method usarEnBatalla() {
+
+    }
 }
