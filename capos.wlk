@@ -20,6 +20,10 @@ object rolando {
 
     method poderDeArtefactos() = artefactos.sum({a => a.poderQueOtorga(self)})
 
+    method enemigosQuePuedeVencer() = erethia.enemigos().filter({enemigo => enemigo.poderDePelea() < self.poderDePelea()})
+
+    method moradasConquistables() = self.enemigosQuePuedeVencer().map({enemigo => enemigo.morada()})
+
     method puedeAgarrar() = artefactos.size() < maxArtefactos
 
     method encontrar(artefacto) {
@@ -59,27 +63,8 @@ object rolando {
     }
 }
 
-object castillo {
-    const inventarioCastillo = []
 
-    method inventario() = inventarioCastillo
-
-    method quedanArtefactos() = not inventarioCastillo.isEmpty()
-
-    method poderArtefactoMasPoderoso(personaje) {
-        return
-            if (self.quedanArtefactos()) {
-                inventarioCastillo.max({a => a.poderQueOtorga(personaje)}).poderQueOtorga(personaje)
-            } else {
-                0
-            }
-    }
-
-    method guardar(cosas) {
-        inventarioCastillo.addAll(cosas)
-    }
-}
-
+// ARTEFACTOS
 object espadaDelDestino {
     var cantBatallas = 0
 
@@ -160,4 +145,67 @@ object armaduraDeAceroValyrio {
     method usarEnBatalla() {
 
     }
+}
+
+
+// ERETHIA
+object erethia {
+    const enemigos = [caterina, archibaldo, astra]
+
+    method enemigos() = enemigos
+}
+
+
+// ENEMIGOS
+object caterina {
+    method poderDePelea() = 28
+
+    method morada() = fortalezaDeAcero
+}
+
+object archibaldo {
+    method poderDePelea() = 16
+
+    method morada() = palacioDeMármol
+}
+
+
+object astra {
+    method poderDePelea() = 14
+
+    method morada() = torreDeMarfil
+}
+
+// MORADAS
+object castillo {
+    const inventarioCastillo = []
+
+    method inventario() = inventarioCastillo
+
+    method quedanArtefactos() = not inventarioCastillo.isEmpty()
+
+    method poderArtefactoMasPoderoso(personaje) {
+        return
+            if (self.quedanArtefactos()) {
+                inventarioCastillo.max({a => a.poderQueOtorga(personaje)}).poderQueOtorga(personaje)
+            } else {
+                0
+            }
+    }
+
+    method guardar(cosas) {
+        inventarioCastillo.addAll(cosas)
+    }
+}
+
+object fortalezaDeAcero {
+
+}
+
+object palacioDeMármol {
+
+}
+
+object torreDeMarfil {
+
 }

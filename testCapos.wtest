@@ -162,3 +162,30 @@ describe "Parte 2.2: Libro de Hechizos (general)" {
         assert.equals(rolando.poderBase(), espadaDelDestino.poderQueOtorga(rolando))
     }
 }
+
+describe "2.3: Enemigos" {
+
+    method initialize() {
+        rolando.aumentarCapacidad()
+    }
+
+    test "Rolando sin artefactos no puede vencer a ningún enemigo ni conquistar ninguna morada" {
+        assert.equals([], rolando.enemigosQuePuedeVencer())
+        assert.equals([], rolando.moradasConquistables())
+    }
+
+    test "Rolando con 16 de poder puede vencer solo a Astra y conquistar la torre de Marfil" {
+        rolando.encontrar(espadaDelDestino)
+        rolando.encontrar(armaduraDeAceroValyrio)
+        assert.equals([astra], rolando.enemigosQuePuedeVencer())
+        assert.equals([torreDeMarfil], rolando.moradasConquistables())
+    }
+
+    test "Rolando con 19 de poder puede vencer a Astra y Archibaldo, y conquistar la torre de Marfil y el palacio de Marmol" {
+        rolando.encontrar(espadaDelDestino)
+        rolando.encontrar(armaduraDeAceroValyrio)
+        rolando.encontrar(collarDivino)
+        assert.equals([archibaldo, astra], rolando.enemigosQuePuedeVencer())
+        assert.equals([palacioDeMármol, torreDeMarfil], rolando.moradasConquistables())
+    }
+}
