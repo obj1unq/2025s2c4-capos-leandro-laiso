@@ -107,3 +107,58 @@ describe "Parte 2.1: Comportamiento de los artefactos" {
         assert.equals(24, rolando.poderDePelea())
     }
 }
+
+describe "Parte 2.2: Libro de Hechizos (invocación)" {
+
+    method initialize() {
+        rolando.encontrar(libroDeHechizos)
+    }
+    
+    test "La invocación sin artefactos en castillo devuelve 0 de poder" {
+        rolando.batallar()
+        rolando.batallar()
+        assert.equals(0, libroDeHechizos.poderQueOtorga(rolando))
+    }
+
+}
+
+describe "Parte 2.2: Libro de Hechizos (general)" {
+    
+    method initialize() {
+        rolando.aumentarCapacidad()
+        rolando.encontrar(espadaDelDestino)
+        rolando.encontrar(armaduraDeAceroValyrio)
+        rolando.encontrar(collarDivino)
+        rolando.guardarArtefactosEnCastillo()
+        rolando.encontrar(libroDeHechizos)
+    }
+
+    test "Antes de la primera batalla, el libro de hechizos aporta 4 de la bendición." {
+        assert.equals(4, rolando.poderDeArtefactos())
+    }
+
+    test "Luego de la primera batalla el libro de hechizos aporta 6 por la invisibilidad." {
+        rolando.batallar()
+        assert.equals(6, rolando.poderDeArtefactos())
+    }
+
+    test "Luego de la segunda batalla, el libro aporta 7, ya que la invocación otorga los 7 puntos de la espada." {
+        rolando.batallar()
+        rolando.batallar()
+        assert.equals(7, rolando.poderDeArtefactos())
+    }
+
+    test "Luego de la tercera batalla, ya no quedan más hechizos, por lo que el aporte del libro es 0" {
+        rolando.batallar()
+        rolando.batallar()
+        rolando.batallar()
+        assert.equals(0, rolando.poderDeArtefactos())
+    }
+
+    test "La invocación no afecta el estado de los artefactos (espada)" {
+        rolando.batallar()
+        rolando.batallar()
+        rolando.batallar()
+        assert.equals(rolando.poderBase(), espadaDelDestino.poderQueOtorga(rolando))
+    }
+}

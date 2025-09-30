@@ -10,6 +10,8 @@ object rolando {
 
     method poseeArtefacto(artefacto) = self.artefactosTotales().contains(artefacto)
 
+    method poderArtefactoMasPoderosoCastillo() = castillo.poderArtefactoMasPoderoso(self)
+
     method historia() = historia
 
     method poderBase() = poderBase
@@ -62,6 +64,17 @@ object castillo {
 
     method inventario() = inventarioCastillo
 
+    method quedanArtefactos() = not inventarioCastillo.isEmpty()
+
+    method poderArtefactoMasPoderoso(personaje) {
+        return
+            if (self.quedanArtefactos()) {
+                inventarioCastillo.max({a => a.poderQueOtorga(personaje)}).poderQueOtorga(personaje)
+            } else {
+                0
+            }
+    }
+
     method guardar(cosas) {
         inventarioCastillo.addAll(cosas)
     }
@@ -87,7 +100,38 @@ object espadaDelDestino {
 }
 
 object libroDeHechizos {
+    const hechizos = [bendicion, invisibilidad, invocacion]
 
+    method quedanHechizos() = not hechizos.isEmpty()
+    
+    method poderQueOtorga(personaje) {
+        return 
+            if (self.quedanHechizos()) {
+                hechizos.head().poderHechizo(personaje)
+            } else {
+                0
+            }
+    }
+
+    method usarEnBatalla() {
+        if (self.quedanHechizos()) {
+            hechizos.remove(hechizos.first())
+        }
+    }
+}
+
+object bendicion {
+    const poderBase = 4
+
+    method poderHechizo(personaje) = poderBase
+}
+
+object invisibilidad {
+    method poderHechizo(personaje) = personaje.poderBase()
+}
+
+object invocacion {
+    method poderHechizo(personaje) = personaje.poderArtefactoMasPoderosoCastillo()
 }
 
 object collarDivino {
