@@ -26,6 +26,11 @@ object rolando {
 
     method esPoderoso() = self.enemigosQuePuedeVencer() == erethia.enemigos()
 
+    method poseeArtefactoFatal(enemigo) = artefactos.any({a => a.poderQueOtorga(self) > enemigo.poderDePelea()})
+
+    method artefactoFatal(enemigo) = artefactos.findOrElse( {a => a.poderQueOtorga(self) > enemigo.poderDePelea()}, 
+                                                            {self.error("No tengo un artefacto fatal para ese enemigo")})
+
     method puedeAgarrar() = artefactos.size() < maxArtefactos
 
     method encontrar(artefacto) {

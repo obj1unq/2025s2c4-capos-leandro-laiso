@@ -2,13 +2,13 @@ import capos.*
 
 describe "Parte 1: Rolando" {
     test "Al principio rolando puede agarrar objetos" {
-        assert.equals(true, rolando.puedeAgarrar())
+        assert.that(rolando.puedeAgarrar())
     }
 
     test "Rolando puede agarrar 2 objetos y no más" {
         rolando.agarrar(espadaDelDestino)
         rolando.agarrar(libroDeHechizos)
-        assert.equals(false, rolando.puedeAgarrar())
+        assert.that(not rolando.puedeAgarrar())
     }
 
     test "Al querer agarrar más objetos de los que puede, da error" {
@@ -21,7 +21,7 @@ describe "Parte 1: Rolando" {
         rolando.agarrar(espadaDelDestino)
         rolando.agarrar(libroDeHechizos)
         rolando.guardarArtefactosEnCastillo()
-        assert.equals(true, rolando.puedeAgarrar())
+        assert.that(rolando.puedeAgarrar())
     }
 
     test "Rolando agarra 2 artefactos, los deja en el castillo, agarra uno más y también lo guarda. Puede agarrar más cosas" {
@@ -30,7 +30,7 @@ describe "Parte 1: Rolando" {
         rolando.guardarArtefactosEnCastillo()
         rolando.agarrar(collarDivino)
         rolando.guardarArtefactosEnCastillo()
-        assert.equals(true, rolando.puedeAgarrar())
+        assert.that(rolando.puedeAgarrar())
     }
 
     test "Consultar los elementos de rolando y los del castillo" {
@@ -45,8 +45,8 @@ describe "Parte 1: Rolando" {
 
     test "Consultar si rolando tiene un artefacto específico" {
         rolando.agarrar(espadaDelDestino)
-        assert.equals(false, rolando.poseeArtefacto(collarDivino))
-        assert.equals(true, rolando.poseeArtefacto(espadaDelDestino))
+        assert.that(not rolando.poseeArtefacto(collarDivino))
+        assert.that(rolando.poseeArtefacto(espadaDelDestino))
     }
 
     test "Consultar el historial de encuentros con artefactos de rolando (aunque no los agarre)" {
@@ -200,7 +200,7 @@ describe "Parte 2.4: Poderoso" {
         rolando.encontrar(espadaDelDestino)
         rolando.encontrar(armaduraDeAceroValyrio)
         rolando.encontrar(collarDivino)
-        assert.equals(false, rolando.esPoderoso())
+        assert.that(not rolando.esPoderoso())
         assert.equals(19, rolando.poderDePelea())
     }
 
@@ -213,7 +213,36 @@ describe "Parte 2.4: Poderoso" {
         rolando.encontrar(espadaDelDestino)
         rolando.encontrar(armaduraDeAceroValyrio)
         rolando.encontrar(collarDivino)
-        assert.equals(true, rolando.esPoderoso())
+        assert.that(rolando.esPoderoso())
         assert.equals(29, rolando.poderDePelea())
+    }
+}
+
+describe "Parte 2.5: Artefacto fatal" {
+    test "Al principio Rolando no tiene artefacto fatal para nadie" {
+        assert.that(not rolando.poseeArtefactoFatal(caterina))
+        assert.that(not rolando.poseeArtefactoFatal(archibaldo))
+        assert.that(not rolando.poseeArtefactoFatal(astra))
+    }
+
+    test "Al pedir un objeto fatal que no existe da error" {
+        assert.throwsException({rolando.artefactoFatal(astra)})
+    }
+
+    test "Una espada sin usar de rolando con poder base 15 es artefacto fatal para Astra" {
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.encontrar(espadaDelDestino)
+        assert.that(rolando.poseeArtefactoFatal(astra))
+        assert.doesNotThrowException({rolando.artefactoFatal(astra)})
+        assert.equals(espadaDelDestino, rolando.artefactoFatal(astra))
     }
 }
