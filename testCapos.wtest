@@ -163,7 +163,7 @@ describe "Parte 2.2: Libro de Hechizos (general)" {
     }
 }
 
-describe "2.3: Enemigos" {
+describe "Parte 2.3: Enemigos" {
 
     method initialize() {
         rolando.aumentarCapacidad()
@@ -187,5 +187,33 @@ describe "2.3: Enemigos" {
         rolando.encontrar(collarDivino)
         assert.equals([archibaldo, astra], rolando.enemigosQuePuedeVencer())
         assert.equals([palacioDeMármol, torreDeMarfil], rolando.moradasConquistables())
+    }
+}
+
+describe "Parte 2.4: Poderoso" {
+
+    method initialize() {
+        rolando.aumentarCapacidad()
+    }
+
+    test "Rolando con 19 de poder no es poderoso" {
+        rolando.encontrar(espadaDelDestino)
+        rolando.encontrar(armaduraDeAceroValyrio)
+        rolando.encontrar(collarDivino)
+        assert.equals(false, rolando.esPoderoso())
+        assert.equals(19, rolando.poderDePelea())
+    }
+
+    test "Rolando con 10 de poder base (29 de pelea) sí es poderoso" {
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.encontrar(espadaDelDestino)
+        rolando.encontrar(armaduraDeAceroValyrio)
+        rolando.encontrar(collarDivino)
+        assert.equals(true, rolando.esPoderoso())
+        assert.equals(29, rolando.poderDePelea())
     }
 }

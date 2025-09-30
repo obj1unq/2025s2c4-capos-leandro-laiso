@@ -24,6 +24,8 @@ object rolando {
 
     method moradasConquistables() = self.enemigosQuePuedeVencer().map({enemigo => enemigo.morada()})
 
+    method esPoderoso() = self.enemigosQuePuedeVencer() == erethia.enemigos()
+
     method puedeAgarrar() = artefactos.size() < maxArtefactos
 
     method encontrar(artefacto) {
@@ -57,9 +59,13 @@ object rolando {
         maxArtefactos += 1
     }
 
+    method aumentarPoderBase() {
+        poderBase += 1
+    }
+
     method batallar() {
         artefactos.forEach({a => a.usarEnBatalla()})
-        poderBase += 1
+        self.aumentarPoderBase()
     }
 }
 
