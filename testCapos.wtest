@@ -1,1 +1,248 @@
-r
+import capos.*
+
+describe "Parte 1: Rolando" {
+    test "Al principio rolando puede agarrar objetos" {
+        assert.that(rolando.puedeAgarrar())
+    }
+
+    test "Rolando puede agarrar 2 objetos y no más" {
+        rolando.agarrar(espadaDelDestino)
+        rolando.agarrar(libroDeHechizos)
+        assert.that(not rolando.puedeAgarrar())
+    }
+
+    test "Al querer agarrar más objetos de los que puede, da error" {
+        rolando.agarrar(espadaDelDestino)
+        rolando.agarrar(libroDeHechizos)
+        assert.throwsException({rolando.agarrar(armaduraDeAceroValyrio)})
+    }
+
+    test "Rolando puede guardar todos sus objetos en el castillo y ahora puede agarrar cosas" {
+        rolando.agarrar(espadaDelDestino)
+        rolando.agarrar(libroDeHechizos)
+        rolando.guardarArtefactosEnCastillo()
+        assert.that(rolando.puedeAgarrar())
+    }
+
+    test "Rolando agarra 2 artefactos, los deja en el castillo, agarra uno más y también lo guarda. Puede agarrar más cosas" {
+        rolando.agarrar(espadaDelDestino)
+        rolando.agarrar(libroDeHechizos)
+        rolando.guardarArtefactosEnCastillo()
+        rolando.agarrar(collarDivino)
+        rolando.guardarArtefactosEnCastillo()
+        assert.that(rolando.puedeAgarrar())
+    }
+
+    test "Consultar los elementos de rolando y los del castillo" {
+        rolando.agarrar(espadaDelDestino)
+        rolando.agarrar(libroDeHechizos)
+        rolando.guardarArtefactosEnCastillo()
+        rolando.agarrar(collarDivino)
+        assert.equals([collarDivino], rolando.artefactos())
+        assert.equals([espadaDelDestino, libroDeHechizos], castillo.inventario())
+        assert.equals([collarDivino, espadaDelDestino, libroDeHechizos], rolando.artefactosTotales())
+    }
+
+    test "Consultar si rolando tiene un artefacto específico" {
+        rolando.agarrar(espadaDelDestino)
+        assert.that(not rolando.poseeArtefacto(collarDivino))
+        assert.that(rolando.poseeArtefacto(espadaDelDestino))
+    }
+
+    test "Consultar el historial de encuentros con artefactos de rolando (aunque no los agarre)" {
+        rolando.encontrar(espadaDelDestino)
+        rolando.encontrar(libroDeHechizos)
+        rolando.encontrar(collarDivino)
+        rolando.guardarArtefactosEnCastillo()
+        rolando.encontrar(armaduraDeAceroValyrio)
+        rolando.encontrar(collarDivino)
+        assert.equals([espadaDelDestino, libroDeHechizos, collarDivino, armaduraDeAceroValyrio, collarDivino], rolando.historia())
+    }
+}
+
+describe "Parte 2.1: Comportamiento de los artefactos" {
+
+    method initialize() {
+        rolando.aumentarCapacidad()
+        rolando.encontrar(espadaDelDestino)
+        rolando.encontrar(armaduraDeAceroValyrio)
+        rolando.encontrar(collarDivino)
+    }
+
+    test "Poder de pelea de rolando y artefactos sin haber batallado" {
+        assert.equals(5, rolando.poderBase())
+        assert.equals(5, espadaDelDestino.poderQueOtorga(rolando))
+        assert.equals(6, armaduraDeAceroValyrio.poderQueOtorga(rolando))
+        assert.equals(3, collarDivino.poderQueOtorga(rolando))
+        assert.equals(19, rolando.poderDePelea())
+    }
+
+    test "Poder de pelea de rolando y artefactos tras 1 batalla" {
+        rolando.batallar()
+        assert.equals(6, rolando.poderBase())
+        assert.equals(3, espadaDelDestino.poderQueOtorga(rolando))
+        assert.equals(6, armaduraDeAceroValyrio.poderQueOtorga(rolando))
+        assert.equals(3, collarDivino.poderQueOtorga(rolando))
+        assert.equals(18, rolando.poderDePelea())
+    }
+
+    test "Poder de pelea de rolando y artefactos tras 2 batallas" {
+        rolando.batallar()
+        rolando.batallar()
+        assert.equals(7, rolando.poderBase())
+        assert.equals(3.5, espadaDelDestino.poderQueOtorga(rolando))
+        assert.equals(6, armaduraDeAceroValyrio.poderQueOtorga(rolando))
+        assert.equals(5, collarDivino.poderQueOtorga(rolando))
+        assert.equals(21.5, rolando.poderDePelea())
+    }
+
+    test "Poder de pelea de rolando y artefactos tras 3 batallas" {
+        rolando.batallar()
+        rolando.batallar()
+        rolando.batallar()
+        assert.equals(8, rolando.poderBase())
+        assert.equals(4, espadaDelDestino.poderQueOtorga(rolando))
+        assert.equals(6, armaduraDeAceroValyrio.poderQueOtorga(rolando))
+        assert.equals(6, collarDivino.poderQueOtorga(rolando))
+        assert.equals(24, rolando.poderDePelea())
+    }
+}
+
+describe "Parte 2.2: Libro de Hechizos (invocación)" {
+
+    method initialize() {
+        rolando.encontrar(libroDeHechizos)
+    }
+    
+    test "La invocación sin artefactos en castillo devuelve 0 de poder" {
+        rolando.batallar()
+        rolando.batallar()
+        assert.equals(0, libroDeHechizos.poderQueOtorga(rolando))
+    }
+
+}
+
+describe "Parte 2.2: Libro de Hechizos (general)" {
+    
+    method initialize() {
+        rolando.aumentarCapacidad()
+        rolando.encontrar(espadaDelDestino)
+        rolando.encontrar(armaduraDeAceroValyrio)
+        rolando.encontrar(collarDivino)
+        rolando.guardarArtefactosEnCastillo()
+        rolando.encontrar(libroDeHechizos)
+    }
+
+    test "Antes de la primera batalla, el libro de hechizos aporta 4 de la bendición." {
+        assert.equals(4, rolando.poderDeArtefactos())
+    }
+
+    test "Luego de la primera batalla el libro de hechizos aporta 6 por la invisibilidad." {
+        rolando.batallar()
+        assert.equals(6, rolando.poderDeArtefactos())
+    }
+
+    test "Luego de la segunda batalla, el libro aporta 7, ya que la invocación otorga los 7 puntos de la espada." {
+        rolando.batallar()
+        rolando.batallar()
+        assert.equals(7, rolando.poderDeArtefactos())
+    }
+
+    test "Luego de la tercera batalla, ya no quedan más hechizos, por lo que el aporte del libro es 0" {
+        rolando.batallar()
+        rolando.batallar()
+        rolando.batallar()
+        assert.equals(0, rolando.poderDeArtefactos())
+    }
+
+    test "La invocación no afecta el estado de los artefactos (espada)" {
+        rolando.batallar()
+        rolando.batallar()
+        rolando.batallar()
+        assert.equals(rolando.poderBase(), espadaDelDestino.poderQueOtorga(rolando))
+    }
+}
+
+describe "Parte 2.3: Enemigos" {
+
+    method initialize() {
+        rolando.aumentarCapacidad()
+    }
+
+    test "Rolando sin artefactos no puede vencer a ningún enemigo ni conquistar ninguna morada" {
+        assert.equals([], rolando.enemigosQuePuedeVencer())
+        assert.equals([], rolando.moradasConquistables())
+    }
+
+    test "Rolando con 16 de poder puede vencer solo a Astra y conquistar la torre de Marfil" {
+        rolando.encontrar(espadaDelDestino)
+        rolando.encontrar(armaduraDeAceroValyrio)
+        assert.equals([astra], rolando.enemigosQuePuedeVencer())
+        assert.equals([torreDeMarfil], rolando.moradasConquistables())
+    }
+
+    test "Rolando con 19 de poder puede vencer a Astra y Archibaldo, y conquistar la torre de Marfil y el palacio de Marmol" {
+        rolando.encontrar(espadaDelDestino)
+        rolando.encontrar(armaduraDeAceroValyrio)
+        rolando.encontrar(collarDivino)
+        assert.equals([archibaldo, astra], rolando.enemigosQuePuedeVencer())
+        assert.equals([palacioDeMármol, torreDeMarfil], rolando.moradasConquistables())
+    }
+}
+
+describe "Parte 2.4: Poderoso" {
+
+    method initialize() {
+        rolando.aumentarCapacidad()
+    }
+
+    test "Rolando con 19 de poder no es poderoso" {
+        rolando.encontrar(espadaDelDestino)
+        rolando.encontrar(armaduraDeAceroValyrio)
+        rolando.encontrar(collarDivino)
+        assert.that(not rolando.esPoderoso())
+        assert.equals(19, rolando.poderDePelea())
+    }
+
+    test "Rolando con 10 de poder base (29 de pelea) sí es poderoso" {
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.encontrar(espadaDelDestino)
+        rolando.encontrar(armaduraDeAceroValyrio)
+        rolando.encontrar(collarDivino)
+        assert.that(rolando.esPoderoso())
+        assert.equals(29, rolando.poderDePelea())
+    }
+}
+
+describe "Parte 2.5: Artefacto fatal" {
+    test "Al principio Rolando no tiene artefacto fatal para nadie" {
+        assert.that(not rolando.poseeArtefactoFatal(caterina))
+        assert.that(not rolando.poseeArtefactoFatal(archibaldo))
+        assert.that(not rolando.poseeArtefactoFatal(astra))
+    }
+
+    test "Al pedir un objeto fatal que no existe da error" {
+        assert.throwsException({rolando.artefactoFatal(astra)})
+    }
+
+    test "Una espada sin usar de rolando con poder base 15 es artefacto fatal para Astra" {
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.aumentarPoderBase()
+        rolando.encontrar(espadaDelDestino)
+        assert.that(rolando.poseeArtefactoFatal(astra))
+        assert.doesNotThrowException({rolando.artefactoFatal(astra)})
+        assert.equals(espadaDelDestino, rolando.artefactoFatal(astra))
+    }
+}
